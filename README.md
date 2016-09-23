@@ -86,31 +86,30 @@ Username and password are ```qgis```/```qgis```.
 Sample datasets are provided in ```/home/qgis/qgisgmlas/data``` folder.
 
 ```
+├── convert-samples.sh
 ├── db
-│   ├── biogeographicalregion.sqlite
-│   ├── cdda.sqlite
-│   ├── geologicalunit.sqlite
-│   ├── lcv.sqlite
-│   └── mappedfeature.sqlite
+│   ├── BR.sqlite
+│   └── GE.sqlite
 ├── geosciml
 │   └── mappedfeature.gml
 ├── inspire
-│   ├── biogeographicalregion
+│   ├── BR
 │   │   ├── bioGeographicalRegion.gfs
 │   │   ├── bioGeographicalRegion.gml
 │   │   └── INSPIRE_DataSpecification_BR_v3.0.pdf
-│   ├── geologicalunit
+│   ├── GE
 │   │   └── geologicalunit.gml
-│   ├── landcover
+│   ├── LC
 │   │   ├── INSPIRE_DataSpecification_LC_v3.0.pdf
 │   │   ├── lcvLandCoverDataset.gml
 │   │   ├── lcvLandCoverUnit.gfs
 │   │   ├── lcvLandCoverUnit.gml
 │   │   └── lcv.sqlite-journal
-│   └── protectedsites
+│   └── PS
 │       ├── cddaDesignatedArea.gfs
 │       ├── cddaDesignatedArea.gml
 │       └── INSPIRE_DataSpecification_PS_v3.2.pdf
+
 └── testing
     └── array_type_test.sqlite
 ```
