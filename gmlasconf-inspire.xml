@@ -10,7 +10,7 @@
     <Validation enabled="false">
         <FailIfError>false</FailIfError>
     </Validation>
-    <ExposeMetadataLayers>false</ExposeMetadataLayers>
+    <ExposeMetadataLayers>true</ExposeMetadataLayers>
     <LayerBuildingRules>
         <AlwaysGenerateOGRId>true</AlwaysGenerateOGRId>
         <RemoveUnusedLayers>false</RemoveUnusedLayers>
