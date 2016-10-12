@@ -38,7 +38,7 @@ ogrinfo -ro -al GMLAS:cddaDesignatedArea.gml
 
 ```
 ogrinfo -ro -al GMLAS:cddaDesignatedArea.gml \
-                              -oo EXPOSE_METADATA_LAYERS=YES
+        -oo EXPOSE_METADATA_LAYERS=YES
 
 ```
 
@@ -57,6 +57,49 @@ ogr2ogr PG:'host=localhost user=qgis password=qgis dbname=inspire' GMLAS:cddaDes
       -f PostgreSQL -dsco spatialite=yes  -oo EXPOSE_METADATA_LAYERS=YES
 ```
 
+* How-to build database from XSD?
+
+```
+# List schema entities
+ogrinfo GMLAS: -oo XSD=http://inspire.ec.europa.eu/schemas/hy-n/4.0/HydroNetwork.xsd
+Had to open data source read-only.
+INFO: Open of `GMLAS:'
+      using driver `GMLAS' successful.
+1: HydroNode (Point)
+2: HydroNode_metaDataProperty (None)
+3: HydroNode_name (None)
+4: HydroNode_inNetwork (None)
+5: HydroNode_spokeEnd (None)
+
+
+# Create database from schema
+ogr2ogr ps_db.sqlite GMLAS: \
+      -f sqlite \
+      -oo XSD=http://inspire.ec.europa.eu/schemas/ps/4.0/ProtectedSites.xsd
+
+
+```
+
+* How-to append dataset from different areas?
+
+Use -append option.
+
+
+* How-to deal with non spatial tables?
+
+Use -append -doo LIST_ALL_TABLES=YES options.
+
+
+* How-to deal with nullable?
+
+```
+ERROR 1: sqlite3_step() failed:
+  NOT NULL constraint failed: designatedarea.identifier_codespace (19)
+```
+
+Use -forceNullable option to remove NOT NULL constraints.
+
+
 
 * How-to convert from GML to spatialite using python? 
 
@@ -69,6 +112,75 @@ gdal.VectorTranslate('gmlas_test1.sqlite',  \
                                format = 'SQLite', \
                                datasetCreationOptions = ['SPATIALITE=YES'] )
 ```
+
+
+* How-to resolve INSPIRE codelist using Registry ?
+
+By default, no XLink resolution is made.
+
+```
+ogrinfo GMLAS:inspire/PS/cddaDesignatedArea.gml DesignatedArea_siteDesignation
+
+OGRFeature(DesignatedArea_siteDesignation):174
+  ogr_pkid (String) = CDDA_DESIGNATEDAREA_70584b91-6434-4762-9bc1-a78ebb25412a_siteDesignation_174
+  parent_id (String) = CDDA_DESIGNATEDAREA_70584b91-6434-4762-9bc1-a78ebb25412a
+  nilReason (String) = (null)
+  DesignationType_designationScheme_owns (Integer(Boolean)) = 0
+  DesignationType_designationScheme_href (String) = http://inspire.ec.europa.eu/codelist/DesignationSchemeValue/IUCN
+
+```
+
+
+To enable XLink resolution and collect information in the remote document, add a ```CONFIG_FILE``` option (eg. ```-oo CONFIG_FILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire.xml``` and turn on XLink resolution. In the INSPIRE context, codelist elements are described in more details in the Registry (http://inspire.ec.europa.eu/codelist/). The following example shows how to collect the codelist name and definition based on the Registry API:
+
+```
+    <XLinkResolution>
+        <URLSpecificResolution>
+            <URLPrefix>http://inspire.ec.europa.eu/codelist</URLPrefix>
+            <HTTPHeader>
+                <Name>Accept</Name>
+                <Value>application/x-iso19135+xml</Value>
+            </HTTPHeader>
+            <HTTPHeader>
+                <Name>Accept-Language</Name>
+                <Value>en</Value>
+            </HTTPHeader>
+            <AllowRemoteDownload>true</AllowRemoteDownload>
+            <ResolutionMode>FieldsFromXPath</ResolutionMode>
+            <ResolutionDepth>1</ResolutionDepth>
+            <CacheResults>true</CacheResults>
+            <Field>
+                <Name>name</Name>
+                <Type>string</Type>
+                <XPath>RE_RegisterItem/name/gco:CharacterString</XPath>
+            </Field>
+            <Field>
+                <Name>definition</Name>
+                <Type>string</Type>
+                <XPath>RE_RegisterItem/definition/gco:CharacterString</XPath>
+            </Field>
+        </URLSpecificResolution>
+```
+
+To execute the conversion with a custom ```CONFIG_FILE``` use:
+
+```
+ogrinfo GMLAS:inspire/PS/cddaDesignatedArea.gml DesignatedArea_siteDesignation -oo CONFIG_FILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire.xml
+
+OGRFeature(DesignatedArea_siteDesignation):174
+  ogr_pkid (String) = CDBCBACC5B6ED965FF611A1D7C8B51CA_DesignatedArea_102_siteDesignation_174
+  parent_ogr_pkid (String) = CDBCBACC5B6ED965FF611A1D7C8B51CA_DesignatedArea_102
+  nilReason (String) = (null)
+  DesignationType_designationScheme_owns (Integer(Boolean)) = 0
+  DesignationType_designationScheme_href (String) = http://inspire.ec.europa.eu/codelist/DesignationSchemeValue/IUCN
+  DesignationType_designationScheme_name (String) = IUCN
+  DesignationType_designationScheme_definition (String) = The Protected Site has a classification using the International Union for Conservation of Nature classification scheme.
+
+```
+
+The feature #174 has now 2 custom attributes populated from the registry:
+* DesignationType_designationScheme_name
+* DesignationType_designationScheme_definition
 
 
 
@@ -118,6 +230,13 @@ A script is provided for conversion ```convert-samples.sh```.
 
 ## Versions
 
+### v20161012
+
+* GDAL GMLAS driver (Read mode) with XLink support
+* QGIS3 with relation discovery support
+* GML App Schema toolbox QGIS plugin installed
+* Test with samples from BRGM
+ 
 ### v20160923
 
 * Samples conversion script
