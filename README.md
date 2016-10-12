@@ -100,6 +100,14 @@ ERROR 1: sqlite3_step() failed:
 Use -forceNullable option to remove NOT NULL constraints.
 
 
+* How-to remove empty tables or attributes?
+
+In some cases, the GML may contains only a subset of elements described in the XSD.
+2 options allow to cleanup the database after processing of all GML file content:
+* RemoveUnusedLayers
+* RemoveUnusedFields
+
+![Database create with or without table cleanup](https://github.com/INSPIRE-MIF/qgis-ogr-gmlas/raw/master/img/ogr-options-RemoveUnusedLayers.png "Database create with or without table cleanup")
 
 * How-to convert from GML to spatialite using python? 
 
@@ -182,6 +190,7 @@ The feature #174 has now 2 custom attributes populated from the registry:
 * DesignationType_designationScheme_name
 * DesignationType_designationScheme_definition
 
+![Attributes populated from INSPIRE Registry](https://github.com/INSPIRE-MIF/qgis-ogr-gmlas/raw/master/img/ogr-options-xlink-RegistryResolution.png "Attributes populated from INSPIRE Registry")
 
 
 
