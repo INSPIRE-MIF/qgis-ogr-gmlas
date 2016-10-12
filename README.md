@@ -2,6 +2,12 @@
 
 ## Testing QGIS
 
+### Relationship between tables discovery
+
+When spatial and attribute tables are added to a QGIS project, the user can automatically setup relations between tables based on the database foreign key analysis. Open the project properties, relations tab and select the discover relation actions. The database is analyzed and user can select which relations to enable in the current project.
+
+![Relationship discovery](https://github.com/INSPIRE-MIF/qgis-ogr-gmlas/raw/master/img/qgis-relations-discovery.png "Relationship discovery")
+
 
 
 
