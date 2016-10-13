@@ -250,6 +250,7 @@ A script is provided for conversion ```convert-samples.sh```.
 * GDAL GMLAS driver (Read mode) with XLink support
 * QGIS3 with relation discovery support
 * GML App Schema toolbox QGIS plugin installed
+* Layer menu from project QGIS plugin installed
 * Test with samples from BRGM
  
 ### v20160923
