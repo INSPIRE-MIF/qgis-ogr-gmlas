@@ -7,13 +7,17 @@
 
 ## Testing GDAL
 
-* How-to check GMLAS driver is available in GDAL?
+### How-to?
+
+
+#### How-to check GMLAS driver is available in GDAL?
 
 ```
 gdalinfo --format GMLAS
 ```
 
-* How-to list GML file feature types?
+
+#### How-to list GML file feature types?
 
 ```
 ogrinfo -ro GMLAS:cddaDesignatedArea.gml
@@ -29,12 +33,15 @@ INFO: Open of `GMLAS:cddaDesignatedArea.gml'
 ...
 ```
 
-* How-to display GML file content?
+
+#### How-to display GML file content?
+
 ```
 ogrinfo -ro -al GMLAS:cddaDesignatedArea.gml
 ```
 
-* How-to display layer metadata? 
+
+#### How-to display layer metadata? 
 
 ```
 ogrinfo -ro -al GMLAS:cddaDesignatedArea.gml \
@@ -43,21 +50,23 @@ ogrinfo -ro -al GMLAS:cddaDesignatedArea.gml \
 ```
 
 
-* How-to convert from GML to spatialite? 
+#### How-to convert from GML to spatialite? 
 
 ```
 ogr2ogr cdda.sqlite GMLAS:cddaDesignatedArea.gml \
       -f sqlite -dsco spatialite=yes  -oo EXPOSE_METADATA_LAYERS=YES
 ```
 
-* How-to convert from GML to PostGIS? 
+
+#### How-to convert from GML to PostGIS? 
 
 ```
 ogr2ogr PG:'host=localhost user=qgis password=qgis dbname=inspire' GMLAS:cddaDesignatedArea.gml \
       -f PostgreSQL -dsco spatialite=yes  -oo EXPOSE_METADATA_LAYERS=YES
 ```
 
-* How-to build database from XSD?
+
+#### How-to build database from XSD?
 
 ```
 # List schema entities
@@ -76,21 +85,20 @@ INFO: Open of `GMLAS:'
 ogr2ogr ps_db.sqlite GMLAS: \
       -f sqlite \
       -oo XSD=http://inspire.ec.europa.eu/schemas/ps/4.0/ProtectedSites.xsd
-
-
 ```
 
-* How-to append dataset from different areas?
+
+#### How-to append dataset from different areas?
 
 Use -append option.
 
 
-* How-to deal with non spatial tables?
+#### How-to deal with non spatial tables?
 
 Use -append -doo LIST_ALL_TABLES=YES options.
 
 
-* How-to deal with nullable?
+#### How-to deal with nullable?
 
 ```
 ERROR 1: sqlite3_step() failed:
@@ -100,7 +108,7 @@ ERROR 1: sqlite3_step() failed:
 Use -forceNullable option to remove NOT NULL constraints.
 
 
-* How-to remove empty tables or attributes?
+#### How-to remove empty tables or attributes?
 
 In some cases, the GML may contains only a subset of elements described in the XSD.
 2 options allow to cleanup the database after processing of all GML file content:
@@ -109,7 +117,7 @@ In some cases, the GML may contains only a subset of elements described in the X
 
 ![Database create with or without table cleanup](https://github.com/INSPIRE-MIF/qgis-ogr-gmlas/raw/master/img/ogr-options-RemoveUnusedLayers.png "Database create with or without table cleanup")
 
-* How-to convert from GML to spatialite using python? 
+#### How-to convert from GML to spatialite using python? 
 
 ```
 from osgeo import gdal
@@ -122,7 +130,7 @@ gdal.VectorTranslate('gmlas_test1.sqlite',  \
 ```
 
 
-* How-to resolve INSPIRE codelist using Registry ?
+#### How-to resolve INSPIRE codelist using Registry ?
 
 By default, no XLink resolution is made.
 
@@ -191,6 +199,22 @@ The feature #174 has now 2 custom attributes populated from the registry:
 * DesignationType_designationScheme_definition
 
 ![Attributes populated from INSPIRE Registry](https://github.com/INSPIRE-MIF/qgis-ogr-gmlas/raw/master/img/ogr-options-xlink-RegistryResolution.png "Attributes populated from INSPIRE Registry")
+
+
+#### How-to deal with long table/column names?
+
+Some target datasources may constraint on the lenght of table or column names (eg. 64 for Postgres).
+In this case the option ```IdentifierMaxLength``` is available to limit the size of feature names and column names.
+
+
+```
+   <IdentifierMaxLength>60</IdentifierMaxLength>
+```
+
+
+![Truncated table names](https://github.com/INSPIRE-MIF/qgis-ogr-gmlas/raw/master/img/ogr-mapping-long-table-names.png "Truncated table names")
+
+
 
 
 
