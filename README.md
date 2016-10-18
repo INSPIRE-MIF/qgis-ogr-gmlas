@@ -209,7 +209,7 @@ The feature #174 has now 2 custom attributes populated from the registry:
 
 #### How-to deal with long table/column names?
 
-Some target datasources may constraint on the lenght of table or column names (eg. 64 for Postgres).
+Some target datasources may constraint on the length of table or column names (eg. 64 for Postgres).
 In this case the option ```IdentifierMaxLength``` is available to limit the size of feature names and column names.
 
 
