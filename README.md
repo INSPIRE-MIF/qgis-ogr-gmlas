@@ -89,7 +89,7 @@ INFO: Open of `GMLAS:'
 
 # Create database from schema
 ogr2ogr ps_db.sqlite GMLAS: \
-      -f sqlite \
+      -f sqlite -dsco SPATIALITE=YES \
       -oo XSD=http://inspire.ec.europa.eu/schemas/ps/4.0/ProtectedSites.xsd
 ```
 
