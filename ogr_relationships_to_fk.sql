@@ -22,23 +22,32 @@ BEGIN
             );
 	    FOR r IN EXECUTE q
 	    LOOP
-		RAISE NOTICE 'Creating FK on %.%', r.parent_layer, r.parent_pkid;
-                -- Create PK on target column   
-		aq := (
-		  'ALTER TABLE ' || t.table_schema || '.' || r.parent_layer || 
-		  ' ADD CONSTRAINT ' || r.parent_layer || r.parent_pkid || '_pk ' ||
-		  ' UNIQUE (' || r.parent_pkid || ')'
-		);
-		EXECUTE aq;
-
+                BEGIN
+		  RAISE NOTICE 'Creating FK on %.%', r.parent_layer, r.parent_pkid;
+                  aq := (
+		    'ALTER TABLE ' || t.table_schema || '.' || r.parent_layer || 
+		    ' ADD CONSTRAINT ' || r.parent_layer || r.parent_pkid || '_uk ' ||
+		    ' UNIQUE (' || r.parent_pkid || ')'
+		    );
+		  EXECUTE aq;
+                EXCEPTION WHEN OTHERS THEN
+                  RAISE NOTICE '  Constraints already exists.';
+                  RAISE NOTICE '  [%] %', SQLSTATE, SQLERRM;
+                END;
                 -- Create FK
-		aq := (
-		  'ALTER TABLE ' || t.table_schema || '.' || r.child_layer || 
-		  ' ADD CONSTRAINT ' || r.parent_layer || r.parent_pkid || 
-		  ' FOREIGN KEY (' || r.child_pkid || ') ' || 
-		  ' REFERENCES ' || t.table_schema || '.' || r.parent_layer || ' (' || r.parent_pkid || ')'
-		);
-		EXECUTE aq;
+		BEGIN
+                  aq := (
+		    'ALTER TABLE ' || t.table_schema || '.' || r.child_layer || 
+		    ' ADD CONSTRAINT ' || r.parent_layer || r.parent_pkid || 
+		    ' FOREIGN KEY (' || r.child_pkid || ') ' || 
+		    ' REFERENCES ' || t.table_schema || '.' || r.parent_layer || ' (' || r.parent_pkid || ')'
+		  );
+		  EXECUTE aq;
+                EXCEPTION WHEN OTHERS THEN
+                  RAISE NOTICE '  Error during constraint creation. Probably missing element in target table.';
+                  RAISE NOTICE '  [%] %', SQLSTATE, SQLERRM;
+                END;
+
 	    END LOOP;
     END LOOP;
     RETURN 1;

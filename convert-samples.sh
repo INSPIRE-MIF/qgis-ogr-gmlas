@@ -12,11 +12,9 @@ rm -fr db/*.sqlite
 
 echo "Converting samples ..."
 
-
 l=(
-    'inspire/BR/bioGeographicalRegion.gml:br:no'
-# https://github.com/INSPIRE-MIF/qgis-ogr-gmlas/issues/1
-#    'inspire/GE/geologicalunit.gml:ge:yes'
+   'inspire/BR/bioGeographicalRegion.gml:br:no'
+    'inspire/GE/geologicalunit.gml:ge:yes'
     'inspire/LC/lcvLandCoverDataset.gml:lc:yes'
     'inspire/LC/lcvLandCoverUnit.gml:lc:yes'
     'inspire/PS/cddaDesignatedArea.gml:ps:yes'
@@ -32,6 +30,8 @@ l=(
 
 #CONFIGFILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire.xml
 CONFIGFILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire-cleanunused.xml
+#DEBUG="--config CPL_CURL_VERBOSE YES --debug on"
+DEBUG=""
 
 for index in "${l[@]}" ; do
     KEY=$(echo $index | cut -f1 -d:)
@@ -40,19 +40,19 @@ for index in "${l[@]}" ; do
   echo "  $KEY > $VALUE ..."
   echo "    ... to sqlite format ..."
   ogr2ogr db/$VALUE.sqlite GMLAS:$KEY \
-      -f sqlite -append -skipfailures \
-      -nlt CONVERT_TO_LINEAR \
+      -f sqlite -append \
+      $DEBUG -nlt CONVERT_TO_LINEAR \
       -dsco spatialite=yes \
       -oo swap_coordinates=$SWAPCOORDS \
       -oo EXPOSE_METADATA_LAYERS=YES \
       -oo CONFIG_FILE=$CONFIGFILE
 
   echo "    ... to PostGIS format ..."
-  aogr2ogr PG:'host=localhost user=qgis password=qgis dbname=inspire' \
+  ogr2ogr PG:'host=localhost user=qgis password=qgis dbname=inspire' \
       GMLAS:$KEY \
-      -f PostgreSQL -skipfailures \
-      -nlt CONVERT_TO_LINEAR \
-      -lco OVERWRITE=YES -lco SCHEMA=$VALUE \
+      -f PostgreSQL \
+      $DEBUG -nlt CONVERT_TO_LINEAR \
+      -overwrite -lco SCHEMA=$VALUE -lco LAUNDER=NO \
       -oo swap_coordinates=$SWAPCOORDS \
       -oo EXPOSE_METADATA_LAYERS=YES \
       -oo CONFIG_FILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire.xml
