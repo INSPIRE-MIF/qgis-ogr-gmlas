@@ -11,7 +11,6 @@ rm -fr db/*.sqlite
 
 
 echo "Converting samples ..."
-
 l=(
    'inspire/BR/bioGeographicalRegion.gml:br:no'
     'inspire/GE/geologicalunit.gml:ge:yes'
@@ -27,9 +26,9 @@ l=(
     'geology/BRGM_environmental_monitoring_facility_piezometer_50.xml:geology:auto'
     'geology/BRGM_raw_database_observation_waterml2_output.xml:geology:auto'
 )
-
-#CONFIGFILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire.xml
-CONFIGFILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire-cleanunused.xml
+CONFIGFOLDER=/home/qgis/qgisgmlas/sourcecode/gml_application_schema_toolbox/gml_application_schema_toolbox/conf/
+#CONFIGFILE=$CONFIGFOLDER/gmlasconf-inspire.xml
+CONFIGFILE=$CONFIGFOLDER/gmlasconf-inspire-cleanunused.xml
 #DEBUG="--config CPL_CURL_VERBOSE YES --debug on"
 DEBUG=""
 
@@ -55,7 +54,7 @@ for index in "${l[@]}" ; do
       -overwrite -lco SCHEMA=$VALUE -lco LAUNDER=NO \
       -oo swap_coordinates=$SWAPCOORDS \
       -oo EXPOSE_METADATA_LAYERS=YES \
-      -oo CONFIG_FILE=~/qgisgmlas/qgis-ogr-gmlas/gmlasconf-inspire.xml
+      -oo CONFIG_FILE=$CONFIGFILE
 
 done
 echo "Done."
