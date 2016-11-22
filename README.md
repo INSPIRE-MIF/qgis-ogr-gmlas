@@ -240,11 +240,28 @@ In this case the option ```IdentifierMaxLength``` is available to limit the size
 
 
 
+### FAQ
+
+#### Use CONVERT_TO_LINEAR to fix error on create geometry
+
+Example:
+* Curve type not supported in spatialite
+```
+ERROR 6: Cannot create geometry field of type CURVE
+```
+* Mix of geometry type
+```
+Warning 1: Geometry to be inserted is of type Multi Polygon, whereas the layer geometry type is Multi Surface.
+```
+
+Add the ```-nlt CONVERT_TO_LINEAR``` option to fix those types of errors.
 
 
 # Testing with the virtual box
 
 This virtual box runs Ubuntu and is provided to test GML Application Schema support in QGIS and GDAL/OGR.
+
+Download from http://files.titellus.net/vbox/.
 
 Software are installed in ```/home/qgis/qgisgmlas/sourcecode``` folder.
 
@@ -286,6 +303,15 @@ Sample datasets are provided in ```/home/qgis/qgisgmlas/data``` folder.
 A script is provided for conversion ```convert-samples.sh```.
 
 ## Versions
+
+### v20161102
+
+* Update QGIS, GDAL and plugins
+* Update SQL script for creating DB relation from OGR metadata table
+
+### v20161024
+
+* Update QGIS, GDAL and plugins
 
 ### v20161012
 
