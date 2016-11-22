@@ -72,6 +72,24 @@ ogr2ogr PG:'host=localhost user=qgis password=qgis dbname=inspire' GMLAS:cddaDes
 ```
 
 
+#### How-to convert from spatialite or PostGIS to GML?
+
+```
+ogr2ogr -f GMLAS br.gml br.sqlite
+```
+OGR use the ```_ogr_other_metadata``` table to check which schema should be used to generate the output document.
+
+If the schema can not be found, the following message is returned:
+```
+ERROR 1: No schema locations found when analyzing data file: XSD open option must be provided
+```
+
+In such case use the ```INPUT_XSD``` dataset creation options to customize the schema:
+```
+ogr2ogr -f GMLAS rtn.gml -dsco INPUT_XSD=xsd/RoadTransportNetwork.xsd rtn.sqlite 
+```
+
+
 #### How-to build database from XSD?
 
 ```
