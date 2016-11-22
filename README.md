@@ -222,6 +222,21 @@ In this case the option ```IdentifierMaxLength``` is available to limit the size
 
 
 
+### FAQ
+
+#### Use CONVERT_TO_LINEAR to fix error on create geometry
+
+Example:
+* Curve type not supported in spatialite
+```
+ERROR 6: Cannot create geometry field of type CURVE
+```
+* Mix of geometry type
+```
+Warning 1: Geometry to be inserted is of type Multi Polygon, whereas the layer geometry type is Multi Surface.
+```
+
+Add the ```-nlt CONVERT_TO_LINEAR``` option to fix those types of errors.
 
 
 # Testing with the virtual box
