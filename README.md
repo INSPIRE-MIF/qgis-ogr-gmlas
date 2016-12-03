@@ -257,6 +257,44 @@ Warning 1: Geometry to be inserted is of type Multi Polygon, whereas the layer g
 Add the ```-nlt CONVERT_TO_LINEAR``` option to fix those types of errors.
 
 
+
+#### Error 'gml:AbstractCRS' not found
+
+```
+  File
+> "/home/qgis/.qgis3/python/plugins/gml_application_schema_toolbox/gui/import_
+> gmlas_panel.py", line 162, in gmlas_datasource
+>    'EXPOSE_METADATA_LAYERS=YES'])
+>  File "/usr/lib/python3/dist-packages/osgeo/gdal.py", line 2992, in OpenEx
+>    return _gdal.OpenEx(*args, **kwargs)
+> RuntimeError: /vsicurl_streaming/
+> http://schemas.opengis.net/iso/19139/20070417/gsr/spatialReferencing.xsd:19:
+> 39 referenced element 'gml:AbstractCRS' not found
+> http://geoserv.weichand.de:8080/geoserver/wfs?request=GetFeature&count=10&ty
+> penames=bvv%3Abayern_ex&service=WFS&version=2.0.0
+```
+
+This is usually related to the same XSD imported using 2 differents URL. eg.
+
+```
+<xsd:import namespace="http://www.opengis.net/gml/3.2" 
+            schemaLocation="http://geoserv.weichand.de:8080/geoserver/schemas/gml/3.2.1/gml.xsd"/>
+```
+
+and further during XSD resolution
+
+```
+<xs:import namespace="http://www.opengis.net/gml/3.2" 
+           schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+```
+
+This issue is probably related to Xerces. To workaround the issue, user can
+try to edit manually the XSD from the cach in ```$HOME/.gdal/gmlas_xsd_cache/```
+and fix the URL path.
+
+
+
+
 # Testing with the virtual box
 
 This virtual box runs Ubuntu and is provided to test GML Application Schema support in QGIS and GDAL/OGR.
