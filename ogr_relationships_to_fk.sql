@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION ogr_add_fk_from_relationships() 
+CREATE OR REPLACE FUNCTION ogr_add_fk_from_relationships(schema TEXT) 
 RETURNS integer AS
 $BODY$
 DECLARE
@@ -12,10 +12,11 @@ BEGIN
     FOR t IN 
 	SELECT table_schema, table_name
 	FROM information_schema.tables
-	WHERE table_name = '_ogr_layer_relationships'
+	WHERE table_name = '_ogr_layer_relationships' AND
+              table_schema = $1
 	ORDER BY table_schema,table_name
     LOOP
-            RAISE NOTICE 'Processing %.%', t.table_schema, t.table_name;
+            RAISE NOTICE 'Processing %.% ...', t.table_schema, t.table_name;
             q := (
               'SELECT parent_layer, parent_pkid, child_layer, child_pkid '
 	      || 'FROM ' || t.table_schema || '.' || t.table_name
@@ -56,7 +57,7 @@ $BODY$
 LANGUAGE 'plpgsql' ;
 
 
-CREATE OR REPLACE FUNCTION ogr_drop_fk_from_relationships() 
+CREATE OR REPLACE FUNCTION ogr_drop_fk_from_relationships(schema TEXT) 
 RETURNS integer AS
 $BODY$
 DECLARE
@@ -69,7 +70,8 @@ BEGIN
     FOR t IN 
 	SELECT table_schema, table_name
 	FROM information_schema.tables
-	WHERE table_name = '_ogr_layer_relationships'
+	WHERE table_name = '_ogr_layer_relationships' AND
+              table_schema = $1
 	ORDER BY table_schema,table_name
     LOOP
             RAISE NOTICE 'Processing %.%', t.table_schema, t.table_name;
