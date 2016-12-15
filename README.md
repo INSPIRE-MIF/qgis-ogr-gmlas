@@ -105,10 +105,19 @@ INFO: Open of `GMLAS:'
 5: HydroNode_spokeEnd (None)
 
 
-# Create database from schema
+# Create sqlite database from schema
 ogr2ogr ps_db.sqlite GMLAS: \
       -f sqlite -dsco SPATIALITE=YES \
       -oo XSD=http://inspire.ec.europa.eu/schemas/ps/4.0/ProtectedSites.xsd
+      
+# Create PostGIS database from schema
+ogr2ogr PG:'host=localhost user=qgis password=qgis dbname=inspire' GMLAS: \
+      -f PostgreSQL \
+      -oo XSD=http://inspire.ec.europa.eu/schemas/ef/4.0/EnvironmentalMonitoringFacilities.xsd \
+      -nlt CONVERT_TO_LINEAR \
+      -lco SCHEMA=poc_gwml2_inspire \
+      -lco OVERWRITE=YES
+
 ```
 
 
