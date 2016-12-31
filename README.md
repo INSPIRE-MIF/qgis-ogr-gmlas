@@ -1,5 +1,16 @@
 # Consumption and use of GML complex features like INSPIRE harmonised data (vector), GeoSciML within QGIS
 
+
+## INSPIRE use cases
+
+* [Setting up the virtual box with QGIS3 & GML Application Schema toolbox plugin](UC-vbox.md)
+* [Combine datasets from different countries on the same map](UC-overlap.md)
+* [Codelist resolution based on user language](UC-codelist.md)
+* [Create INSPIRE datasets](UC-create-inspire-data.md)
+
+
+See all video on [this channel](https://www.youtube.com/channel/UCM0-LWeavnqldykLpDUWwNA). 
+
 ## Testing QGIS
 
 ### Relationship between tables discovery
